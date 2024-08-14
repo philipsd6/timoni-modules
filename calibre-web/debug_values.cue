@@ -12,7 +12,7 @@ values: {
 	}
 
 	test: image: {
-		repository: "docker.io/curlimages/curl"
+		repository: "busybox"
 		digest:     ""
 		tag:        "latest"
 	}

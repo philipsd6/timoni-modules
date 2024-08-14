@@ -102,7 +102,7 @@ import (
 		annotations?: timoniv1.#Annotations
 
 		port: *80 | int & >0 & <=65535
-		type: *corev1.ServiceTypeClusterIP | corev1.#enumServiceType
+		type: *"ClusterIP"| corev1.#enumServiceType
 	}
 
 	ingress?: {
@@ -114,7 +114,10 @@ import (
 
 	test: {
 		enabled: *false | bool
-		image!:  timoniv1.#Image
+		image: {
+			repository: "docker.io/curlimages/curl"
+			tag:        "latest"
+		} | timoniv1.#Image
 	}
 }
 
