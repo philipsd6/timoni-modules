@@ -7,6 +7,7 @@ import (
 
 #Deployment: appsv1.#Deployment & {
 	#config:    #Config
+	#cmName:    string
 	apiVersion: "apps/v1"
 	kind:       "Deployment"
 	metadata:   #config.metadata
@@ -26,10 +27,13 @@ import (
 						name:            #config.metadata.name
 						image:           #config.image.reference
 						imagePullPolicy: #config.image.pullPolicy
+						envFrom: [{
+							configMapRef: name: #cmName
+						}]
 						ports: [
 							{
 								name:          "http"
-								containerPort: 80
+								containerPort: 8083
 								protocol:      "TCP"
 							},
 						]
@@ -39,14 +43,13 @@ import (
 								port: "http"
 							}
 							initialDelaySeconds: 5
-							periodSeconds:       10
+							periodSeconds:       5
 						}
 						livenessProbe: {
-							tcpSocket: {
-								port: "http"
-							}
+							tcpSocket: port: "http"
 							initialDelaySeconds: 5
 							periodSeconds:       5
+							initialDelaySeconds: 5
 						}
 						if #config.resources != _|_ {
 							resources: #config.resources

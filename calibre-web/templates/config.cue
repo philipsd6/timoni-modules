@@ -39,8 +39,8 @@ import (
 	// The image allows setting the container image repository,
 	// tag, digest and pull policy.
 	image: timoniv1.#Image & {
-		repository: *"docker.io/nginx" | string
-		tag:        *"1-alpine" | string
+		repository: *"lscr.io/linuxserver/calibre-web" | string
+		tag:        *"latest" | string
 		digest:     *"" | string
 	}
 
@@ -87,12 +87,34 @@ import (
 		}
 	}
 
+	userId:          *1000 | int & >0 & <=4294967295
+	groupId:         *1000 | int & >0 & <=4294967295
+	timeZone:        *"Etc/UTC" | string
+	ebookConversion: *false | bool
+	relaxTokenScope: *false | bool
+
+	// persistence?: {
+
+	// }
 	// The service allows setting the Kubernetes Service annotations and port.
 	// By default, the HTTP port is 80.
 	service: {
 		annotations?: timoniv1.#Annotations
 
 		port: *80 | int & >0 & <=65535
+		type: *corev1.ServiceTypeClusterIP | corev1.#enumServiceType
+	}
+
+	ingress?: {
+		annotations?: timoniv1.#Annotations
+		className:    *"nginx" | string
+		tls: []
+		rules: []
+	}
+
+	test: {
+		enabled: *false | bool
+		image!:  timoniv1.#Image
 	}
 }
 
@@ -101,7 +123,15 @@ import (
 	config: #Config
 
 	objects: {
-		deploy: #Deployment & {#config: config}
+		configmap: #ConfigMap & {#config: config}
+
+		deploy: #Deployment & {
+			#config: config
+			#cmName: configmap.metadata.name
+		}
 		service: #Service & {#config: config}
+		if config.ingress != _|_ {
+			ingress: #Ingress & {#config: config}
+		}
 	}
 }

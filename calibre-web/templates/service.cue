@@ -13,7 +13,7 @@ import (
 		metadata: annotations: #config.service.annotations
 	}
 	spec: corev1.#ServiceSpec & {
-		type:     corev1.#ServiceTypeClusterIP
+		type:     #config.service.type
 		selector: #config.selector.labels
 		ports: [
 			{
