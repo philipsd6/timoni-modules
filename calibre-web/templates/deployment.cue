@@ -47,9 +47,8 @@ import (
 						}
 						livenessProbe: {
 							tcpSocket: port: "http"
-							initialDelaySeconds: 5
+							initialDelaySeconds: 60
 							periodSeconds:       5
-							initialDelaySeconds: 5
 						}
 						if #config.resources != _|_ {
 							resources: #config.resources
