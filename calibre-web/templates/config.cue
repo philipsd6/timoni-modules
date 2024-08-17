@@ -93,23 +93,39 @@ import (
 	ebookConversion: *false | bool
 	relaxTokenScope: *false | bool
 
-	// persistence?: {
+	// You will probably want to set up persistence for the books and webapp config.
 
-	// }
+	#persistence: {
+		enabled:      *false | bool
+		mountPath:    string
+		hostPath?:    string
+		storageClass: *"standard" | string
+		size:         *"1Gi" | string
+		accessModes: *["ReadWriteOnce"] | []
+	}
+
+	persistence: [Name=_]: #persistence & {
+		mountPath:    *"/\(Name)" | string
+	}
+	persistence: config: {}
+	persistence: books: {}
+
 	// The service allows setting the Kubernetes Service annotations and port.
 	// By default, the HTTP port is 80.
 	service: {
 		annotations?: timoniv1.#Annotations
 
 		port: *80 | int & >0 & <=65535
-		type: *"ClusterIP"| corev1.#enumServiceType
+		type: *"ClusterIP" | corev1.#enumServiceType
 	}
 
 	ingress?: {
 		annotations?: timoniv1.#Annotations
 		className:    *"nginx" | string
-		tls: []
-		rules: []
+		host:         string
+		path:         *"/" | string
+		pathType:     *"Prefix" | string
+		tls:          *false | bool
 	}
 
 	test: {
@@ -127,6 +143,21 @@ import (
 
 	objects: {
 		configmap: #ConfigMap & {#config: config}
+
+		for k, v in config.persistence if v.enabled {
+			"\(k)": #PersistentVolumeClaim & {
+				#config: config
+				#name:   k
+				#data:   v
+			}
+			if v.hostPath != _|_ {
+				"\(k)-pv": #PersistentVolume & {
+					#config: config
+					#name:   k
+					#data:   v
+				}
+			}
+		}
 
 		deploy: #Deployment & {
 			#config: config

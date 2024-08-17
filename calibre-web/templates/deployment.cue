@@ -57,8 +57,20 @@ import (
 						if #config.securityContext != _|_ {
 							securityContext: #config.securityContext
 						}
+						volumeMounts: [
+							for k, v in #config.persistence if v.enabled {
+								{name: k, mountPath: v.mountPath}
+							},
+						]
 					},
 				]
+				if #config.persistence != _|_ {
+					volumes: [
+						for k, v in #config.persistence if v.enabled {
+							{name: k, persistentVolumeClaim: claimName: k}
+						},
+					]
+				}
 				if #config.pod.affinity != _|_ {
 					affinity: #config.pod.affinity
 				}

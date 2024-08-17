@@ -8,24 +8,32 @@ import (
 	#config:    #Config
 	apiVersion: "networking/v1"
 	kind:       "Ingress"
-	metadata:   #config.metadata
+	metadata: #config.metadata & {
+		labels: #config.selector.labels
+		if #config.ingress.annotations != _|_ {
+			annotations: #config.ingress.annotations
+		}
+	}
 	spec: networkingv1.#IngressSpec & {
 		if #config.ingress.className != _|_ {
 			ingressClassName: #config.ingress.className
 		}
-		if #config.ingress.tls != _|_ {
-			tls: #config.ingress.tls
-		}
-		rules: [for rule in #config.ingress.rules {
-			host: rule.host
-			http: paths: [for p in rule.paths {
-				path:     p.path
-				pathType: p.type
+		rules: [{
+			host: #config.ingress.host
+			http: paths: [{
+				path:     #config.ingress.path
+				pathType: #config.ingress.pathType
 				backend: service: {
 					name: #config.metadata.name
 					port: name: "http"
 				}
 			}]
 		}]
+		if #config.ingress.tls {
+			tls: [{
+				hosts: [#config.ingress.host]
+				secretName: "\(#config.metadata.name)-tls"
+			}]
+		}
 	}
 }
