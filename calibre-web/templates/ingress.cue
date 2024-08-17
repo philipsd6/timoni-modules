@@ -6,7 +6,7 @@ import (
 
 #Ingress: networkingv1.#Ingress & {
 	#config:    #Config
-	apiVersion: "networking/v1"
+	apiVersion: "networking.k8s.io/v1"
 	kind:       "Ingress"
 	metadata: #config.metadata & {
 		labels: #config.selector.labels
