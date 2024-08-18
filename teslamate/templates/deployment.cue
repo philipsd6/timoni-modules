@@ -6,7 +6,12 @@ import (
 )
 
 #Deployment: appsv1.#Deployment & {
-	#config:    #Config
+	#config: #Config
+	#cmName: string
+	#secName: string
+	if #config.bitwarden != _|_ {
+		#secName: string
+	}
 	apiVersion: "apps/v1"
 	kind:       "Deployment"
 	metadata:   #config.metadata
@@ -26,6 +31,10 @@ import (
 						name:            #config.metadata.name
 						image:           #config.image.reference
 						imagePullPolicy: #config.image.pullPolicy
+						envFrom: [
+							{configMapRef: name: #cmName},
+							{secretRef: name: #secName},
+						]
 						ports: [
 							{
 								name:          "http"
@@ -58,6 +67,10 @@ import (
 						name:            "grafana"
 						image:           #config.grafana_image.reference
 						imagePullPolicy: #config.grafana_image.pullPolicy
+						envFrom: [
+							{configMapRef: name: #cmName},
+							{secretRef: name: #secName},
+						]
 						ports: [
 							{
 								name:          "grafana"

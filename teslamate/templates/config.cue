@@ -126,10 +126,14 @@ import (
 		host:    *"" | string
 	}
 	database: {
-		enabled:   *true | bool
-		host:      *"" | string
-		port:      *5432 | int & >0 & <=65535
-		superuser: *true | bool
+		enabled:       *true | bool
+		host:          *"" | string
+		port:          *5432 | int & >0 & <=65535
+		superuser:     *true | bool
+		name:          *"teslamate" | string
+		user:          *"teslamate" | string
+		password:      *"teslamate" | string // these should be provided by the user as injected secrets unless bitwarden is used
+		encryptionKey: *"teslamate" | string
 	}
 	bitwarden?: {
 		id:     string
@@ -154,9 +158,17 @@ import (
 
 	objects: {
 		configmap: #ConfigMap & {#config: config}
-		if config.bitwarden != _|_ {
-			secret: #ExternalSecret & {#config: config}
-			db: #PostgreSQLUser & {#config: config}
+		secret: {
+			if config.bitwarden != _|_ {
+				#ExternalSecret & {#config: config}
+			}
+			if config.bitwarden == _|_ {
+				#Secret & {#config: config}
+			}
+		}
+		db: #PostgreSQLUser & {
+			#config: config,
+			#secName: secret.metadata.name
 		}
 		if config.persistence.enabled {
 			pvc: #PersistentVolumeClaim & {#config: config, #name: "grafana"}
@@ -164,7 +176,11 @@ import (
 				pv: #PersistentVolume & {#config: config, #name: "grafana"}
 			}
 		}
-		deploy: #Deployment & {#config: config}
+		deploy: #Deployment & {
+			#config:  config
+			#cmName:  configmap.metadata.name
+			#secName: secret.metadata.name
+		}
 		service: #Service & {#config: config}
 		if config.ingress != _|_ {
 			ingress: #Ingress & {#config: config}
