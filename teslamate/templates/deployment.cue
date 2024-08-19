@@ -6,12 +6,9 @@ import (
 )
 
 #Deployment: appsv1.#Deployment & {
-	#config: #Config
-	#cmName: string
-	#secName: string
-	if #config.bitwarden != _|_ {
-		#secName: string
-	}
+	#config:    #Config
+	#cmName:    string
+	#secName:   string
 	apiVersion: "apps/v1"
 	kind:       "Deployment"
 	metadata:   #config.metadata
@@ -78,6 +75,14 @@ import (
 								protocol:      "TCP"
 							},
 						]
+						if #config.persistence.enabled {
+							volumeMounts: [
+								{
+									name:      "grafana"
+									mountPath: "/var/lib/grafana"
+								},
+							]
+						}
 						readinessProbe: {
 							httpGet: {
 								path: "/"
@@ -101,6 +106,14 @@ import (
 						}
 					},
 				]
+				if #config.persistence.enabled {
+					volumes: [
+						{
+							name: "grafana"
+							persistentVolumeClaim: claimName: "grafana"
+						},
+					]
+				}
 				if #config.pod.affinity != _|_ {
 					affinity: #config.pod.affinity
 				}
