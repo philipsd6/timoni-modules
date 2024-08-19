@@ -16,7 +16,9 @@ import (
 
 	spec: corev1.#ServiceSpec & {
 		type:                     corev1.#ServiceTypeClusterIP
-		selector:                 #config.selector.labels
+		selector:                 #config.selector.labels & {
+			"app.kubernetes.io/component": "database"
+		}
 		publishNotReadyAddresses: true
 		ports: [
 			{
