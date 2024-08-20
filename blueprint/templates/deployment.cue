@@ -26,6 +26,10 @@ import (
 						name:            #config.metadata.name
 						image:           #config.image.reference
 						imagePullPolicy: #config.image.pullPolicy
+						envFrom: [
+							{configMapRef: name: #cmName},
+							{secretRef: name: #secName},
+						]
 						ports: [
 							{
 								name:          "http"
