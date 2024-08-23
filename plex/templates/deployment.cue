@@ -50,7 +50,7 @@ import (
 						volumeMounts: [
 							{name: "transcode", mountPath: "/transcode"},
 							if #config.persistence.enabled
-							for val in ["config", "data"] {
+							for val in ["config", "media"] {
 								{name: val, mountPath: "/\(val)"}
 							},
 							if #config.useQuickSync {
@@ -95,7 +95,7 @@ import (
 				volumes: [
 					{name: "transcode", emptyDir: medium: "Memory"},
 					if #config.persistence.enabled
-					for val in ["config", "data"] {
+					for val in ["config", "media"] {
 						{name: val, persistentVolumeClaim: claimName: val}
 					},
 					if #config.useQuickSync {
