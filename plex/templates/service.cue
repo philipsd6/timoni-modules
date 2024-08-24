@@ -4,7 +4,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-#Service: corev1.#Service & {
+#ServiceTCP: corev1.#Service & {
 	#config:    #Config
 	apiVersion: "v1"
 	kind:       "Service"
@@ -28,7 +28,7 @@ import (
 			name:       "plex"
 			targetPort: name
 		}, {
-			port:       "32469"
+			port:       32469
 			targetPort: "dlna-tcp"
 			name:       "dlna-tcp"
 			protocol:   "TCP"
@@ -36,7 +36,7 @@ import (
 	}
 }
 
-#Service: corev1.#Service & {
+#ServiceUDP: corev1.#Service & {
 	#config:    #Config
 	apiVersion: "v1"
 	kind:       "Service"
@@ -55,32 +55,32 @@ import (
 		type:     #config.service.type
 		selector: #config.selector.labels
 		ports: [{
-			port:       "1900"
+			port:       1900
 			targetPort: "dlna-udp"
 			name:       "dlna-udp"
 			protocol:   "UDP"
 		}, {
-			port:       "5353"
+			port:       5353
 			targetPort: "discovery-udp"
 			name:       "discovery-udp"
 			protocol:   "UDP"
 		}, {
-			port:       "32410"
+			port:       32410
 			targetPort: "gdm-32410"
 			name:       "gdm-32410"
 			protocol:   "UDP"
 		}, {
-			port:       "32412"
+			port:       32412
 			targetPort: "gdm-32412"
 			name:       "gdm-32412"
 			protocol:   "UDP"
 		}, {
-			port:       "32413"
+			port:       32413
 			targetPort: "gdm-32413"
 			name:       "gdm-32413"
 			protocol:   "UDP"
 		}, {
-			port:       "32414"
+			port:       32414
 			targetPort: "gdm-32414"
 			name:       "gdm-32414"
 			protocol:   "UDP"

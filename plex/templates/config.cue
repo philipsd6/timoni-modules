@@ -156,7 +156,8 @@ import (
 
 	objects: {
 		configmap: #ConfigMap & {#config: config}
-		service: #Service & {#config: config}
+		servicetcp: #ServiceTCP & {#config: config}
+		serviceudp: #ServiceUDP & {#config: config}
 
 		if config.persistence.enabled {
 			if config.persistence.config.hostPath != _|_ {
