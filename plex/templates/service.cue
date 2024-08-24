@@ -8,11 +8,7 @@ import (
 	#config:    #Config
 	apiVersion: "v1"
 	kind:       "Service"
-	metadata: {name: "\(#config.metadata.name)-tcp"} & {
-		for key, val in #config.metadata if key != "name" {
-			"\(key)": val
-		}
-	}
+	metadata: #config.metadata
 	if #config.service.annotations != _|_ {
 		metadata: annotations: #config.service.annotations
 	}
