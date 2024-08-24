@@ -7,7 +7,7 @@ import (
 
 #Deployment: appsv1.#Deployment & {
 	#config:    #Config
-	#cmName:   string
+	#cmName:    string
 	apiVersion: "apps/v1"
 	kind:       "Deployment"
 	metadata:   #config.metadata
@@ -38,15 +38,41 @@ import (
 						image:           #config.image.reference
 						imagePullPolicy: #config.image.pullPolicy
 						envFrom: [
-							{configMapRef: name: #cmName}
+							{configMapRef: name: #cmName},
 						]
-						ports: [
-							{
-								name:          "plex"
-								containerPort: 32400
-								protocol:      "TCP"
-							},
-						]
+						ports: [{
+							name:          "plex"
+							containerPort: 32400
+							protocol:      "TCP"
+						}, {
+							name:          "dlna-tcp"
+							containerPort: 32469
+							protocol:      "TCP"
+						}, {
+							name:          "dlna-udp"
+							containerPort: 1900
+							protocol:      "UDP"
+						}, {
+							name:          "discovery-udp"
+							containerPort: 5353
+							protocol:      "UDP"
+						}, {
+							name:          "gdm-32410"
+							containerPort: 32410
+							protocol:      "UDP"
+						}, {
+							name:          "gdm-32412"
+							containerPort: 32412
+							protocol:      "UDP"
+						}, {
+							containerPort: 32413
+							name:          "gdm-32413"
+							protocol:      "UDP"
+						}, {
+							name:          "gdm-32414"
+							containerPort: 32414
+							protocol:      "UDP"
+						}]
 						volumeMounts: [
 							{name: "transcode", mountPath: "/transcode"},
 							if #config.persistence.enabled
