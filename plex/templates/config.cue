@@ -99,10 +99,10 @@ import (
 
 	// The service allows setting the Kubernetes Service annotations and port.
 	service: {
-		annotations?: timoniv1.#Annotations
-
-		port: *32400 | int & >0 & <=65535
-		type: *"ClusterIP" | corev1.#enumServiceType
+		annotations?:    timoniv1.#Annotations
+		port:            *32400 | int & >0 & <=65535
+		type:            *"ClusterIP" | corev1.#enumServiceType
+		loadBalancerIP?: string
 	}
 
 	ingress: {

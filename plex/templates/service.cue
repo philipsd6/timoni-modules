@@ -16,11 +16,11 @@ import (
 	if #config.service.annotations != _|_ {
 		metadata: annotations: #config.service.annotations
 	}
-	if #config.service.loadBalancerIP != _|_ {
-		loadBalancerIP: #config.service.loadBalancerIP
-	}
 	spec: corev1.#ServiceSpec & {
 		type:     #config.service.type
+		if #config.service.loadBalancerIP != _|_ {
+			loadBalancerIP: #config.service.loadBalancerIP
+		}
 		selector: #config.selector.labels
 		ports: [{
 			port:       #config.service.port
@@ -48,11 +48,11 @@ import (
 	if #config.service.annotations != _|_ {
 		metadata: annotations: #config.service.annotations
 	}
-	if #config.service.loadBalancerIP != _|_ {
-		loadBalancerIP: #config.service.loadBalancerIP
-	}
 	spec: corev1.#ServiceSpec & {
 		type:     #config.service.type
+		if #config.service.loadBalancerIP != _|_ {
+			loadBalancerIP: #config.service.loadBalancerIP
+		}
 		selector: #config.selector.labels
 		ports: [{
 			port:       1900
