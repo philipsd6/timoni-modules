@@ -19,6 +19,8 @@ import (
 		resources: requests: storage: #config.persistence.size
 		accessModes: [#config.persistence.accessMode]
 		storageClassName: #config.persistence.storageClass
-		volumeName:       "\(#config.metadata.name)-\(#name)"
+		if #config.persistence.hostPath != _|_ {
+			volumeName:       "\(#config.metadata.name)-\(#name)"
+		}
 	}
 }
