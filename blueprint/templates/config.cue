@@ -115,7 +115,7 @@ import (
 		hostPath?: string
 	}
 
-	bitwarden?: {
+	#bitwarden: {
 		// id is a uuid
 		id: =~"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
 		// the default source
@@ -131,6 +131,7 @@ import (
 			remoteProperty: string
 		}]
 	}
+	bitwarden?: [...#bitwarden]
 
 	// additional environment variables to set in configmap
 	env?: [=~"^[A-Z_]+$"]: string

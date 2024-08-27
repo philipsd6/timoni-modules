@@ -11,5 +11,8 @@ import (
 	#Data: {
 		// add data here
 		...
-	} & {if #config.env != _|_ {#config.env}}
+	}
+	if #config.env != _|_ {
+		#Data: #config.env
+	}
 }
