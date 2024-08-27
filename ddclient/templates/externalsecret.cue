@@ -44,6 +44,7 @@ import (
 				remoteRef: key:      e.id
 				remoteRef: property: var
 				sourceRef: storeRef: name: "bitwarden-\(e.source)"
+				sourceRef: storeRef: kind: "ClusterSecretStore"
 			}
 			for e in #config.bitwarden
 			if e.mapping != _|_
@@ -52,6 +53,7 @@ import (
 				remoteRef: key:      e.id
 				remoteRef: property: prop
 				sourceRef: storeRef: name: "bitwarden-\(e.source)"
+				sourceRef: storeRef: kind: "ClusterSecretStore"
 			}
 			for e in #config.bitwarden
 			if e.items != _|_
@@ -60,6 +62,7 @@ import (
 				remoteRef: key:      e.id
 				remoteRef: property: item.remoteProperty
 				sourceRef: storeRef: name: "bitwarden-\(item.source)"
+				sourceRef: storeRef: kind: "ClusterSecretStore"
 			}
 		]
 	}
