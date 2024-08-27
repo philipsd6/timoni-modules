@@ -32,6 +32,9 @@ import (
 									if #secName != _|_ {
 										{secretRef: name: #secName}
 									},
+									if #cmName != _|_ {
+										{configMapRef: name: #cmName}
+									},
 								]
 								volumeMounts: [{
 									name:      #config.metadata.name

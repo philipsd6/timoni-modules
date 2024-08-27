@@ -12,7 +12,7 @@ import (
 	spec: {
 		refreshInterval: "1h"
 		secretStoreRef: kind: "ClusterSecretStore"
-		secretStoreRef: name: "bitwarden-login"
+		secretStoreRef: name: "bitwarden-fields"
 		target: {
 			deletionPolicy: "Delete"
 			template: type: "Opaque"

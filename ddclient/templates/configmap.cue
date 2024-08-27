@@ -15,5 +15,9 @@ import (
 			verbose=yes
 			\(#config.ddclientConfig)
 			"""
-	} & {if #config.env != _|_ {#config.env}}
+	}
+	if #config.env != _|_ {
+		#Data: #config.env
+	}
+
 }
