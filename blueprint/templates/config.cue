@@ -46,11 +46,12 @@ import (
 
 		imagePullSecrets?: [...timoniv1.#ObjectReference]
 
-		automountServiceAccountToken: *false | true
-		setHostnameAsFQDN:            *false | true
-		hostNetwork:                  *false | true
-		dnsPolicy:                    *"ClusterFirst" | corev1.#enumDNSPolicy
-		restartPolicy:                "Always"
+		automountServiceAccountToken:  *false | true
+		setHostnameAsFQDN:             *false | true
+		hostNetwork:                   *false | true
+		dnsPolicy:                     *"ClusterFirst" | corev1.#enumDNSPolicy
+		restartPolicy:                 "Always"
+		terminationGracePeriodSeconds: *30 | int & >0
 	}
 
 	// The resources allows setting the container resource requirements.

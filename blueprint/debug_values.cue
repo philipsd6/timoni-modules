@@ -39,16 +39,18 @@ values: {
 		APP_ENV: "production"
 	}
 
-	bitwarden: id: "440287ac-5e59-11ef-92ef-17fc78cc48da"
-	bitwarden: source: "fields" // default
-	bitwarden: variables: ["BOGUS"] // only useful for 'fields' source
-	bitwarden: mapping: { // useful for any source
-		CERTIFICATE: "ssl-certicate"
-	}
-	bitwarden: items: [ // required for anything other than the primary source
-		{source: "login", secretKey: "APP_USERNAME", remoteProperty: "username"},
-		{source: "login", secretKey: "APP_PASSWORD", remoteProperty: "password"},
-	]
+	bitwarden: [{
+		id:     "440287ac-5e59-11ef-92ef-17fc78cc48da"
+		source: "fields" // default
+		variables: ["BOGUS"] // only useful for 'fields' source
+		mapping: {// useful for any source
+			CERTIFICATE: "ssl-certicate"
+		}
+		items: [// required for anything other than the primary source
+			{source: "login", secretKey: "APP_USERNAME", remoteProperty: "username"},
+			{source: "login", secretKey: "APP_PASSWORD", remoteProperty: "password"},
+		]
+	}]
 
 	timeZone: "America/New_York"
 }

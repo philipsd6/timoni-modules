@@ -11,52 +11,59 @@ import (
 	metadata:   #config.metadata
 	spec: {
 		refreshInterval: "1h"
-		secretStoreRef: {
-			name: "bitwarden-\(#config.bitwarden.source)"
-			kind: "ClusterSecretStore"
-		}
+		secretStoreRef: kind: "ClusterSecretStore"
+		secretStoreRef: name: "bitwarden-fields"
 		target: {
 			deletionPolicy: "Delete"
 			template: type: "Opaque"
-			if #config.bitwarden.variables != _|_ {
+			for e in #config.bitwarden if e.variables != _|_ {
 				template: data: {
-					for key in #config.bitwarden.variables {"\(key)": "{{ .\(key) }}"}
+					for var in e.variables {"\(var)": "{{ .\(var) }}"}
 				}
 			}
-			if #config.bitwarden.mapping != _|_ {
+
+			for e in #config.bitwarden if e.mapping != _|_ {
 				template: data: {
-					for key, prop in #config.bitwarden.mapping {"\(key)": "{{ .\(key) }}"}
+					for key, prop in e.mapping {"\(key)": "{{ .\(key) }}"}
 				}
 			}
-			if #config.bitwarden.items != _|_ {
+			for e in #config.bitwarden if e.items != _|_ {
 				template: data: {
-					for item in #config.bitwarden.items {
+					for item in e.items {
 						"\(item.secretKey)": "{{ .\(item.secretKey) }}"
 					}
 				}
 			}
 		}
+
 		data: [
-			if #config.bitwarden.variables != _|_
-			for key in #config.bitwarden.variables {
+			for e in #config.bitwarden
+			if e.variables != _|_
+			for var in e.variables {
+				secretKey: var
+				remoteRef: key:      e.id
+				remoteRef: property: var
+				sourceRef: storeRef: name: "bitwarden-\(e.source)"
+				sourceRef: storeRef: kind: "ClusterSecretStore"
+			}
+			for e in #config.bitwarden
+			if e.mapping != _|_
+			for key, prop in e.mapping {
 				secretKey: key
-				remoteRef: key:      #config.bitwarden.id
-				remoteRef: property: key
-			},
-			if #config.bitwarden.mapping != _|_
-			for key, prop in #config.bitwarden.mapping {
-				secretKey: key
-				remoteRef: key:      #config.bitwarden.id
+				remoteRef: key:      e.id
 				remoteRef: property: prop
-			},
-			if #config.bitwarden.items != _|_
-			for item in #config.bitwarden.items {
+				sourceRef: storeRef: name: "bitwarden-\(e.source)"
+				sourceRef: storeRef: kind: "ClusterSecretStore"
+			}
+			for e in #config.bitwarden
+			if e.items != _|_
+			for item in e.items {
 				secretKey: item.secretKey
-				remoteRef: key:      #config.bitwarden.id
+				remoteRef: key:      e.id
 				remoteRef: property: item.remoteProperty
 				sourceRef: storeRef: name: "bitwarden-\(item.source)"
 				sourceRef: storeRef: kind: "ClusterSecretStore"
-			},
+			}
 		]
 	}
 }
