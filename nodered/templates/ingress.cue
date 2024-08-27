@@ -1,7 +1,6 @@
 package templates
 
 import (
-	"strings"
 	networkingv1 "k8s.io/api/networking/v1"
 )
 
@@ -28,17 +27,7 @@ import (
 					name: #config.metadata.name
 					port: name: "http"
 				}
-			},
-				if #config.additionalPorts != _|_
-				for additionalPort in #config.additionalPorts {
-					path:     "\(strings.TrimRight(#config.ingress.path, "/"))/\(additionalPort.name)"
-					pathType: #config.ingress.pathType
-					backend: service: {
-						name: additionalPort.name
-						port: name: additionalPort.name
-					}
-				},
-			]
+			}]
 		}]
 		if #config.ingress.tls {
 			tls: [{
