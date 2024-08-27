@@ -22,6 +22,7 @@ import (
 				template: corev1.#PodTemplateSpec & {
 					metadata: #config.metadata
 					spec: corev1.#PodSpec & {
+						restartPolicy: "OnFailure"
 						containers: [
 							{
 								name:            #config.metadata.name
