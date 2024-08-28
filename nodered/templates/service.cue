@@ -22,6 +22,13 @@ import (
 				name:       "http"
 				targetPort: name
 			},
+			if #config.additionalPorts != _|_
+			for p in #config.additionalPorts {
+				name:     p.name
+				port:     p.port
+				targetPort: p.name
+				protocol: p.protocol
+			},
 		]
 	}
 }

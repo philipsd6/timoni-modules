@@ -53,13 +53,13 @@ import (
 								protocol:      "TCP"
 							},
 							if #config.additionalPorts != _|_
-							for additionalPort in #config.additionalPorts {
+							for p in #config.additionalPorts {
 								{
-									name:          additionalPort.name
-									containerPort: additionalPort.port
-									protocol:      additionalPort.protocol
+									name:          p.name
+									containerPort: p.port
+									protocol:      p.protocol
 								}
-							}
+							},
 						]
 						volumeMounts: [
 							if #config.persistence.enabled {
@@ -69,30 +69,30 @@ import (
 								}
 							},
 						]
-						// startupProbe: {
-						//	tcpSocket: port: "http"
-						//	initialDelaySeconds: 5
-						//	periodSeconds:       5
-						//	failureThreshold:    30
-						//	timeoutSeconds:      1
-						// }
-						// readinessProbe: {
-						//	httpGet: {
-						//		path: "/"
-						//		port: "http"
-						//	}
-						//	initialDelaySeconds: 5
-						//	periodSeconds:       10
-						//	failureThreshold:    3
-						//	timeoutSeconds:      1
-						// }
-						// livenessProbe: {
-						//	tcpSocket: port: "http"
-						//	initialDelaySeconds: 5
-						//	periodSeconds:       5
-						//	failureThreshold:    3
-						//	timeoutSeconds:      1
-						// }
+						startupProbe: {
+							tcpSocket: port: "http"
+							initialDelaySeconds: 5
+							periodSeconds:       5
+							failureThreshold:    30
+							timeoutSeconds:      1
+						}
+						readinessProbe: {
+							httpGet: {
+								path: "/"
+								port: "http"
+							}
+							initialDelaySeconds: 5
+							periodSeconds:       10
+							failureThreshold:    3
+							timeoutSeconds:      1
+						}
+						livenessProbe: {
+							tcpSocket: port: "http"
+							initialDelaySeconds: 5
+							periodSeconds:       10
+							failureThreshold:    3
+							timeoutSeconds:      1
+						}
 						if #config.resources != _|_ {
 							resources: #config.resources
 						}
