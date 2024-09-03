@@ -8,30 +8,33 @@ import (
 	#config:    #Config
 	apiVersion: "networking.k8s.io/v1"
 	kind:       "Ingress"
-	metadata: #config.metadata & {
+	metadata: {name: "\(#config.metadata.name)-additional"} & {
+		for k, v in #config.metadata if k != "name" {
+			"\(k)": v
+		}} & {
 		labels: #config.selector.labels
-		if #config.ingress.annotations != _|_ {
-			annotations: #config.ingress.annotations
+		if #config.additionalIngress.annotations != _|_ {
+			annotations: #config.additionalIngress.annotations
 		}
 	}
 	spec: networkingv1.#IngressSpec & {
-		if #config.ingress.className != _|_ {
-			ingressClassName: #config.ingress.className
+		if #config.additionalIngress.className != _|_ {
+			ingressClassName: #config.additionalIngress.className
 		}
 		rules: [{
-			host: #config.ingress.host
+			host: #config.additionalIngress.host
 			http: paths: [{
-				path:     #config.ingress.path
-				pathType: #config.ingress.pathType
+				path:     #config.additionalIngress.path
+				pathType: #config.additionalIngress.pathType
 				backend: service: {
 					name: #config.metadata.name
 					port: name: "http"
 				}
 			}]
 		}]
-		if #config.ingress.tls {
+		if #config.additionalIngress.tls {
 			tls: [{
-				hosts: [#config.ingress.host]
+				hosts: [#config.additionalIngress.host]
 				secretName: "\(#config.metadata.name)-tls"
 			}]
 		}

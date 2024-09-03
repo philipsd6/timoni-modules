@@ -10,28 +10,28 @@ import (
 	kind:       "Ingress"
 	metadata: #config.metadata & {
 		labels: #config.selector.labels
-		if #config.additionalIngress.annotations != _|_ {
-			annotations: #config.additionalIngress.annotations
+		if #config.ingress.annotations != _|_ {
+			annotations: #config.ingress.annotations
 		}
 	}
 	spec: networkingv1.#IngressSpec & {
-		if #config.additionalIngress.className != _|_ {
-			ingressClassName: #config.additionalIngress.className
+		if #config.ingress.className != _|_ {
+			ingressClassName: #config.ingress.className
 		}
 		rules: [{
-			host: #config.additionalIngress.host
+			host: #config.ingress.host
 			http: paths: [{
-				path:     #config.additionalIngress.path
-				pathType: #config.additionalIngress.pathType
+				path:     #config.ingress.path
+				pathType: #config.ingress.pathType
 				backend: service: {
 					name: #config.metadata.name
 					port: name: "http"
 				}
 			}]
 		}]
-		if #config.additionalIngress.tls {
+		if #config.ingress.tls {
 			tls: [{
-				hosts: [#config.additionalIngress.host]
+				hosts: [#config.ingress.host]
 				secretName: "\(#config.metadata.name)-tls"
 			}]
 		}
