@@ -18,8 +18,7 @@ import (
 			annotations: {
 				for k, v in #config.ingress.annotations if !strings.Contains(k, "auth") && !strings.Contains(k, "configuration-snippet") {
 					"\(k)": v
-				}} & {
-				"nginx.ingress.kubernetes.io/rewrite-target": "/"
+				}
 			}
 		}
 	}
