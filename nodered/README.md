@@ -89,12 +89,12 @@ Instead of using standard secrets, if `external-secrets` is in use in the cluste
 | `items?:`     | `[...{source: string, secretKey: string, remoteProperty: string}]` | `[]`     | If set, will set secretKey and remoteProperty from the specified source |
 
 ### NodeRED
-| Key                | Type                                                             | Default            | Description                                                       |
-|--------------------|------------------------------------------------------------------|--------------------|-------------------------------------------------------------------|
-| `env:`             | `{[string]: string}`                                             | `{}`               | If set, will include this environment variables in the configMap  |
-| `timeZone:`        | `string`                                                         | `America/New_York` | The preferred timezone                                            |
-| `additionalPorts:` | `[...{expose: bool, name: string, port: int, protocol: string}]` | `[]`               | If set, include these ports, and optionally expose in the ingress |
-|                    |                                                                  |                    |                                                                   |
+| Key                   | Type                                                             | Default            | Description                                                                                          |
+|-----------------------|------------------------------------------------------------------|--------------------|------------------------------------------------------------------------------------------------------|
+| `env:`                | `{[string]: string}`                                             | `{}`               | If set, will include this environment variables in the configMap                                     |
+| `timeZone:`           | `string`                                                         | `America/New_York` | The preferred timezone                                                                               |
+| `additionalPorts:`    | `[...{expose: bool, name: string, port: int, protocol: string}]` | `[]`               | If set, include these ports, and optionally expose in the ingress                                    |
+| `additionalIngress: ` | `ingress`                                                        | `{}`               | If set, create an additional ingress (the same parameters as above are available for customization.) |
 
 [pull-policy]: https://kubernetes.io/docs/concepts/containers/images/#image-pull-policy
 [anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
