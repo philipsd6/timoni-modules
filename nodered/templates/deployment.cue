@@ -78,7 +78,7 @@ import (
 						}
 						readinessProbe: {
 							httpGet: {
-								path: "/"
+								path: "/admin/"
 								port: "http"
 							}
 							initialDelaySeconds: 5
