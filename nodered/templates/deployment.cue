@@ -60,6 +60,14 @@ import (
 									protocol:      p.protocol
 								}
 							},
+							if #config.listeners != _|_
+							for n, p in #config.listeners {
+								{
+									name:          n
+									containerPort: p
+									protocol:      "TCP"
+								}
+							},
 						]
 						volumeMounts: [
 							if #config.persistence.enabled {

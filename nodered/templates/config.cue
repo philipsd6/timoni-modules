@@ -145,15 +145,8 @@ import (
 		port:     int & >0 & <=65535
 		protocol: *"TCP" | "UDP"
 	}]
-	// additional ingress to use for unauthenticated paths
-	additionalIngress: {
-		enabled:      *false | true
-		annotations?: timoniv1.#Annotations
-		className:    *"nginx" | string
-		host:         *metadata.name | string
-		path:         *"/o" | string
-		pathType:     *"Prefix" | string
-		tls:          *true | bool
+	listeners?: {
+		[string]: int & >0 & <=65535
 	}
 }
 
@@ -197,8 +190,8 @@ import (
 		if config.ingress.enabled {
 			ingress: #Ingress & {#config: config}
 		}
-		if config.additionalIngress.enabled {
-			additionalIngress: #AdditionalIngress & {#config: config}
+		if config.listeners != _|_ {
+			listenerIngress: #ListenerIngress & {#config: config}
 		}
 	}
 }

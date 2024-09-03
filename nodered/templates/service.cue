@@ -24,10 +24,17 @@ import (
 			},
 			if #config.additionalPorts != _|_
 			for p in #config.additionalPorts {
-				name:     p.name
-				port:     p.port
+				name:       p.name
+				port:       p.port
 				targetPort: p.name
-				protocol: p.protocol
+				protocol:   p.protocol
+			},
+			if #config.listeners != _|_
+			for n, p in #config.listeners {
+				name:       n
+				port:       p
+				targetPort: n
+				protocol:   "TCP"
 			},
 		]
 	}
