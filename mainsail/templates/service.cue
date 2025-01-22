@@ -14,8 +14,9 @@ import (
 	}
 	spec: corev1.#ServiceSpec & {
 		type:     #config.service.type
-		selector: #config.selector.labels
-		// I can't make this optional with externalName? otherwise it disappears.
+		if type != "ExternalName" {
+			selector: #config.selector.labels
+		}
 		if type == "ExternalName" {
 			externalName: #config.service.externalName
 		}
