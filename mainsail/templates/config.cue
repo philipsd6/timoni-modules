@@ -43,7 +43,9 @@ import (
 
 		port: *80 | int & >0 & <=65535
 		type: *"ClusterIP" | corev1.#enumServiceType
-		externalName?: string @if(type == "ExternalName")
+		if type == "ExternalName" {
+			externalName: string
+		}
 	}
 
 	ingress?: {

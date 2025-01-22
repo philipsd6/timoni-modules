@@ -16,7 +16,9 @@ import (
 		type:     #config.service.type
 		selector: #config.selector.labels
 		// I can't make this optional with externalName? otherwise it disappears.
-		externalName: #config.service.externalName @if(type == "ExternalName")
+		if type == "ExternalName" {
+			externalName: #config.service.externalName
+		}
 		ports: [
 			{
 				port:       #config.service.port
