@@ -6,4 +6,7 @@
 package main
 
 // Placeholder for user-supplied values.
-values: {}
+values: {
+	service: type: "ExternalName"
+	service: externalName: "my-internal-site"
+}

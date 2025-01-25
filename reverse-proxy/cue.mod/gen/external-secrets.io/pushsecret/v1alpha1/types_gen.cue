@@ -129,7 +129,7 @@ import "strings"
 		}
 	}
 
-	// Template defines a mainsail for the created Secret resource.
+	// Template defines a reverse-proxy for the created Secret resource.
 	template?: {
 		data?: {
 			[string]: string
@@ -142,7 +142,7 @@ import "strings"
 		mergePolicy?:   "Replace" | "Merge" | *"Replace"
 
 		// ExternalSecretTemplateMetadata defines metadata fields for the
-		// Secret mainsail.
+		// Secret reverse-proxy.
 		metadata?: {
 			annotations?: {
 				[string]: string

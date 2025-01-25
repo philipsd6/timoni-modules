@@ -5,7 +5,7 @@
 package main
 
 import (
-	templates "timoni.sh/mainsail/templates"
+	templates "timoni.sh/reverse-proxy/templates"
 )
 
 // Define the schema for the user-supplied values.

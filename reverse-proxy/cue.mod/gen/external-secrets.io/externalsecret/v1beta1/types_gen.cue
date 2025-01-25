@@ -267,7 +267,7 @@ import (
 		// Defaults to the .metadata.name of the ExternalSecret resource
 		name?: string
 
-		// Template defines a mainsail for the created Secret resource.
+		// Template defines a reverse-proxy for the created Secret resource.
 		template?: {
 			data?: {
 				[string]: string
@@ -280,7 +280,7 @@ import (
 			mergePolicy?:   "Replace" | "Merge" | *"Replace"
 
 			// ExternalSecretTemplateMetadata defines metadata fields for the
-			// Secret mainsail.
+			// Secret reverse-proxy.
 			metadata?: {
 				annotations?: {
 					[string]: string
