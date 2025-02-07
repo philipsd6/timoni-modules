@@ -1,0 +1,22 @@
+---
+# Source: kwasm-operator/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bogusapp-kwasm-operator
+  labels:
+    helm.sh/chart: kwasm-operator-0.2.3
+    app.kubernetes.io/name: kwasm-operator
+    app.kubernetes.io/instance: bogusapp
+    app.kubernetes.io/version: "0.2.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: kwasm-operator
+    app.kubernetes.io/instance: bogusapp

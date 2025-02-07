@@ -1,0 +1,16 @@
+---
+# Source: kwasm-operator/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: bogusapp-kwasm-operator
+  namespace: bogusns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: bogusapp-kwasm-operator
+subjects:
+- kind: ServiceAccount
+  name: bogusapp-kwasm-operator
+  namespace: bogusns

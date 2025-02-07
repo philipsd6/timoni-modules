@@ -1,0 +1,21 @@
+---
+# Source: kwasm-operator/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "bogusapp-kwasm-operator-test-connection"
+  labels:
+    helm.sh/chart: kwasm-operator-0.2.3
+    app.kubernetes.io/name: kwasm-operator
+    app.kubernetes.io/instance: bogusapp
+    app.kubernetes.io/version: "0.2.3"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['bogusapp-kwasm-operator:80']
+  restartPolicy: Never

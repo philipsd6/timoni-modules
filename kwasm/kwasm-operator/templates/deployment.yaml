@@ -1,0 +1,54 @@
+---
+# Source: kwasm-operator/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bogusapp-kwasm-operator
+  labels:
+    helm.sh/chart: kwasm-operator-0.2.3
+    app.kubernetes.io/name: kwasm-operator
+    app.kubernetes.io/instance: bogusapp
+    app.kubernetes.io/version: "0.2.3"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kwasm-operator
+      app.kubernetes.io/instance: bogusapp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kwasm-operator
+        app.kubernetes.io/instance: bogusapp
+    spec:
+      serviceAccountName: bogusapp-kwasm-operator
+      securityContext:
+        {}
+      containers:
+        - name: kwasm-operator
+          env:
+          - name: CONTROLLER_NAMESPACE
+            value: bogusns
+          - name: AUTO_PROVISION_NODES
+            value: "false"
+          - name: INSTALLER_IMAGE
+            value: "ghcr.io/kwasm/kwasm-node-installer:main"
+          securityContext:
+            {}
+          image: "ghcr.io/kwasm/kwasm-operator:kwasm-operator-0.2.2"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          resources:
+            {}
