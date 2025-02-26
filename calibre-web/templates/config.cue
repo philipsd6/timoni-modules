@@ -66,9 +66,10 @@ import (
 	// By default, the container requests 10m CPU and 32Mi memory.
 	resources: timoniv1.#ResourceRequirements & {
 		requests: {
-			cpu:    *"10m" | timoniv1.#CPUQuantity
-			memory: *"32Mi" | timoniv1.#MemoryQuantity
+			cpu:    *"5m" | timoniv1.#CPUQuantity
+			memory: *"180Mi" | timoniv1.#MemoryQuantity
 		}
+		limits: memory: requests.memory
 	}
 
 	// The number of pods replicas.

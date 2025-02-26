@@ -66,9 +66,10 @@ import (
 	// The resources allows setting the container resource requirements.
 	resources: timoniv1.#ResourceRequirements & {
 		requests: {
-			cpu:    *"10m" | timoniv1.#CPUQuantity
-			memory: *"32Mi" | timoniv1.#MemoryQuantity
+			cpu:    *"8m" | timoniv1.#CPUQuantity
+			memory: *"430Mi" | timoniv1.#MemoryQuantity
 		}
+		limits: memory: requests.memory
 	}
 
 	// The number of pods replicas.
