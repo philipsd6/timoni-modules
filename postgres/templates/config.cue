@@ -43,7 +43,7 @@ import (
 	// tag, digest and pull policy.
 	image: timoniv1.#Image & {
 		repository: *"docker.io/postgres" | string
-		tag:        *"16" | string
+		tag:        *"17" | string
 		digest:     *"" | string
 	}
 
