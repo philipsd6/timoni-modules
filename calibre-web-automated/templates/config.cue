@@ -89,11 +89,9 @@ import (
 
 	userId:          *1000 | int & >0 & <=4294967295
 	groupId:         *1000 | int & >0 & <=4294967295
-	timeZone:        *"Etc/UTC" | string
-	ebookConversion: *false | bool
-	relaxTokenScope: *false | bool
+	timeZone:        *"UTC" | string
 
-	// You will probably want to set up persistence for the books and webapp config.
+	// You will probably want to set up persistence for the books and web
 
 	#persistence: {
 		enabled:      *false | bool
@@ -108,7 +106,8 @@ import (
 		mountPath:    *"/\(Name)" | string
 	}
 	persistence: config: {}
-	persistence: books: {}
+	persistence: "calibre-library": {}
+	persistence: "cwa-book-ingest": {}
 
 	// The service allows setting the Kubernetes Service annotations and port.
 	// By default, the HTTP port is 80.
