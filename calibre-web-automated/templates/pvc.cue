@@ -7,7 +7,7 @@ import (
 #PersistentVolumeClaim: corev1.#PersistentVolumeClaim & {
 	#config: #Config
 	#name:   string
-	#data:   #config.#persistence
+	#data:   {...}
 	apiVersion: "v1"
 	kind:       "PersistentVolumeClaim"
 	metadata: {name: #name} & {

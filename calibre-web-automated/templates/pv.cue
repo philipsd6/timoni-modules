@@ -6,8 +6,8 @@ import (
 
 #PersistentVolume: corev1.#PersistentVolume & {
 	#config: #Config
-	#name: string
-	#data: {}
+	#name:   string
+	#data:   {...}
 	apiVersion: "v1"
 	kind: "PersistentVolume"
 	metadata: {name: "\(#config.metadata.name)-\(#name)"} & {
