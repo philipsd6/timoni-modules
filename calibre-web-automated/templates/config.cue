@@ -114,7 +114,7 @@ import (
 	service: {
 		annotations?: timoniv1.#Annotations
 
-		port: *80 | int & >0 & <=65535
+		port: *8083 | int & >0 & <=65535
 		type: *"ClusterIP" | corev1.#enumServiceType
 	}
 
