@@ -25,7 +25,7 @@ import (
 	selector: timoniv1.#Selector & {#Name: metadata.name}
 
 	image: timoniv1.#Image & {
-		repository: *"agreggar/agregarr" | string
+		repository: *"agregarr/agregarr" | string
 		tag:        *"latest" | string
 		digest:     *"" | string
 	}
