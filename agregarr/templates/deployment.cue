@@ -49,7 +49,7 @@ import (
 						ports: [
 							{
 								name:          "http"
-								containerPort: 80
+								containerPort: #config.service.port
 								protocol:      "TCP"
 							},
 						]
