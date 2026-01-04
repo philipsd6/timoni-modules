@@ -62,28 +62,35 @@ import (
 							},
 						]
 						startupProbe: {
-							tcpSocket: port: "http"
-							initialDelaySeconds: 5
+							httpGet: {
+								path: "/ready"
+								port: "http"
+							}
+							initialDelaySeconds: 2
 							periodSeconds:       5
 							failureThreshold:    30
-							timeoutSeconds:      1
+							timeoutSeconds:      2
 						}
 						readinessProbe: {
 							httpGet: {
-								path: "/"
+								path: "/ready"
 								port: "http"
 							}
-							initialDelaySeconds: 5
+							initialDelaySeconds: 0
 							periodSeconds:       10
-							failureThreshold:    3
-							timeoutSeconds:      1
+							failureThreshold:    2
+							timeoutSeconds:      2
+							successThreshold:    1
 						}
 						livenessProbe: {
-							tcpSocket: port: "http"
-							initialDelaySeconds: 5
-							periodSeconds:       5
+							httpGet: {
+								path: "/healthz"
+								port: "http"
+							}
+							initialDelaySeconds: 30
+							periodSeconds:       20
 							failureThreshold:    3
-							timeoutSeconds:      1
+							timeoutSeconds:      3
 						}
 						if #config.resources != _|_ {
 							resources: #config.resources
