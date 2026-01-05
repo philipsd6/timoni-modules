@@ -14,20 +14,20 @@ import (
 			"\(k)": v
 		}} & {
 		labels: #config.selector.labels
-		if #config.ingress.annotations != _|_ {
+		if #config.routes.admin.annotations != _|_ {
 			annotations: {
-				for k, v in #config.ingress.annotations if !strings.Contains(k, "auth") && !strings.Contains(k, "configuration-snippet") {
+				for k, v in #config.routes.admin.annotations if !strings.Contains(k, "auth") && !strings.Contains(k, "configuration-snippet") {
 					"\(k)": v
 				}
 			}
 		}
 	}
 	spec: networkingv1.#IngressSpec & {
-		if #config.ingress.className != _|_ {
-			ingressClassName: #config.ingress.className
+		if #config.routes.admin.className != _|_ {
+			ingressClassName: #config.routes.admin.className
 		}
 		rules: [{
-			host: "listener.\(#config.ingress.host)"
+			host: "listener.\(#config.routes.admin.host)"
 			http: paths: [
 				for n, p in #config.listeners {
 					path:     "/\(n)"
@@ -38,9 +38,9 @@ import (
 					}
 				}]
 		}]
-		if #config.ingress.tls {
+		if #config.routes.admin.tls {
 			tls: [{
-				hosts: ["listener.\(#config.ingress.host)"]
+				hosts: ["listener.\(#config.routes.admin.host)"]
 				secretName: "listener-\(#config.metadata.name)-tls"
 			}]
 		}

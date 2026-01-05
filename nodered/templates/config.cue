@@ -58,9 +58,9 @@ import (
 	resources: timoniv1.#ResourceRequirements & {
 		requests: {
 			cpu:    *"1m" | timoniv1.#CPUQuantity
-			memory: *"168Mi" | timoniv1.#MemoryQuantity
+			memory: *"32Mi" | timoniv1.#MemoryQuantity
 		}
-		limits: memory: requests.memory
+		limits: memory: resources.requests.memory
 	}
 
 	// The number of pods replicas.
@@ -97,15 +97,24 @@ import (
 		type: *"ClusterIP" | corev1.#enumServiceType
 	}
 
-	ingress: {
-		enabled:      *false | true
+
+	#route: {
+		enabled:      *true | false
 		annotations?: timoniv1.#Annotations
 		className:    *"nginx" | string
-		host:         *metadata.name | string
+		host:         *routes.admin.host | string
 		path:         *"/" | string
 		pathType:     *"Prefix" | string
 		tls:          *true | bool
 	}
+	routes: {
+		[string]: #route
+	}
+	routes: admin: enabled: true
+	routes: admin: host: *metadata.name | string
+	routes: admin: path: "/admin"
+	routes: ui: enabled: false
+	routes: ui: path: "/ui"
 
 	persistence: {
 		enabled:      *true | false
@@ -188,9 +197,14 @@ import (
 			#secName: secret.metadata.name
 		}
 
-		if config.ingress.enabled {
-			ingress: #Ingress & {#config: config}
+		for routeName, route in config.routes if route.enabled {
+			"\(routeName)-route": #Route & {
+				#config: config,
+				#routeName: routeName,
+				#thisRoute: route
+			}
 		}
+
 		if config.listeners != _|_ {
 			listenerIngress: #ListenerIngress & {#config: config}
 		}
