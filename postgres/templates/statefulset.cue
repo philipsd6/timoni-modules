@@ -56,7 +56,7 @@ import (
 					if #config.persistence.enabled {
 						{
 							name:      "data"
-							mountPath: "/var/lib/postgresql/data"
+							mountPath: "/var/lib/postgresql"
 						}
 					},
 			]
