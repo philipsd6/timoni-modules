@@ -17,7 +17,7 @@ jobs:
       version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - id: module
         run: |
           MODULE=$(echo "${{ github.ref_name }}" | sed '/[a-zA-Z\-]\+\/[v]\?[0-9.]\+/!{q100}; {s#/[v]\?[0-9.]\+##}' || (echo "unexpected tag version" && exit 1))
@@ -32,7 +32,7 @@ jobs:
     needs: parseTag
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Setup Cosign
         uses: sigstore/cosign-installer@main
       - name: Setup Timoni
