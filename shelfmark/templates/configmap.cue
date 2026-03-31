@@ -13,4 +13,7 @@ import (
 		PGID: "\(#config.groupId)"
 		TZ:   "\(#config.timeZone)"
 	}
+	if #config.env != _|_ {
+		#Data: #config.env
+	}
 }

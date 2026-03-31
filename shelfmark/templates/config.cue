@@ -91,6 +91,9 @@ import (
 	groupId:         *1000 | int & >0 & <=4294967295
 	timeZone:        *"UTC" | string
 
+	// additional environment variables to set in configmap
+	env?: [=~"^[A-Z_]+$"]: string
+
 	// You will probably want to set up persistence for the books and web
 
 	#persistence: {
