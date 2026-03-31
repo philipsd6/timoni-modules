@@ -164,6 +164,7 @@ import (
 		deploy: #Deployment & {
 			#config: config
 			#cmName: configmap.metadata.name
+			// #secName: secret.metadata.name
 		}
 		service: #Service & {#config: config}
 		if config.ingress != _|_ {
