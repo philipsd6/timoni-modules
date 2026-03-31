@@ -2,6 +2,7 @@
 
 package main
 
+#Name: "blueprint"
 #Domain: "example.com"
 
 // Values used by debug_tool.cue.
@@ -15,7 +16,7 @@ values: {
 	persistence: {
 		enabled:      true
 		storageClass: "microk8s-hostpath"
-		hostPath:     "/srv/data/blueprint"
+		hostPath:     "/srv/data/\(#Name)"
 	}
 
 	service: type: "LoadBalancer"
@@ -32,7 +33,7 @@ values: {
 			proxy_set_header X-Email $email;
 			"""
 	}
-	ingress: host: "blueprint.\(#Domain)"
+	ingress: host: "\(#Name).\(#Domain)"
 	ingress: tls:  true
 
 	env: {

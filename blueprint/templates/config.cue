@@ -174,12 +174,17 @@ import (
 			pvc: #PersistentVolumeClaim & {#config: config}
 		}
 
-		// Can swap #Deployment out for #StatefulSet, or add both if needed
 		deployment: #Deployment & {
 			#config:  config
 			#cmName:  configmap.metadata.name
 			#secName: secret.metadata.name
 		}
+
+		// statefulset: #StatefulSet & {
+		//	#config:  config
+		//	#cmName:  configmap.metadata.name
+		//	#secName: secret.metadata.name
+		// }
 
 		if config.ingress.enabled {
 			ingress: #Ingress & {#config: config}
