@@ -419,6 +419,20 @@ import (
 // The annotation is added to a "Bookmark" event.
 #InitialEventsAnnotationKey: "k8s.io/initial-events-end"
 
+// InitialEventsListBlueprintAnnotationKey is the name of the key
+// where an empty, versioned list is encoded in the requested format
+// (e.g., protobuf, JSON, CBOR), then base64-encoded and stored as a string.
+//
+// This encoding matches the request encoding format, which may be
+// protobuf, JSON, CBOR, or others, depending on what the client requested.
+// This ensures that the reconstructed list can be processed through the
+// same decoder chain that would handle a standard LIST call response.
+//
+// The annotation is added to a "Bookmark" event and is used by clients
+// to guarantee the format consistency when reconstructing
+// the list during WatchList processing.
+#InitialEventsListBlueprintAnnotationKey: "kubernetes.io/initial-events-list-blueprint"
+
 // resourceVersionMatch specifies how the resourceVersion parameter is applied. resourceVersionMatch
 // may only be set if resourceVersion is also set.
 //
@@ -524,6 +538,21 @@ import (
 	// +optional
 	// +listType=atomic
 	dryRun?: [...string] @go(DryRun,[]string) @protobuf(5,bytes,rep)
+
+	// if set to true, it will trigger an unsafe deletion of the resource in
+	// case the normal deletion flow fails with a corrupt object error.
+	// A resource is considered corrupt if it can not be retrieved from
+	// the underlying storage successfully because of a) its data can
+	// not be transformed e.g. decryption failure, or b) it fails
+	// to decode into an object.
+	// NOTE: unsafe deletion ignores finalizer constraints, skips
+	// precondition checks, and removes the object from the storage.
+	// WARNING: This may potentially break the cluster if the workload
+	// associated with the resource being unsafe-deleted relies on normal
+	// deletion flow. Use only if you REALLY know what you are doing.
+	// The default value is false, and the user must opt in to enable it
+	// +optional
+	ignoreStoreReadErrorWithClusterBreakingPotential?: null | bool @go(IgnoreStoreReadErrorWithClusterBreakingPotential,*bool) @protobuf(6,varint,opt)
 }
 
 // FieldValidationIgnore ignores unknown/duplicate fields
@@ -804,6 +833,7 @@ import (
 	#StatusReasonGone |
 	#StatusReasonInvalid |
 	#StatusReasonServerTimeout |
+	#StatusReasonStoreReadError |
 	#StatusReasonTimeout |
 	#StatusReasonTooManyRequests |
 	#StatusReasonBadRequest |
@@ -891,6 +921,22 @@ import (
 //   "retryAfterSeconds" int32 - the number of seconds before the operation should be retried
 // Status code 500
 #StatusReasonServerTimeout: #StatusReason & "ServerTimeout"
+
+// StatusReasonStoreReadError means that the server encountered an error while
+// retrieving resources from the backend object store.
+// This may be due to backend database error, or because processing of the read
+// resource failed.
+// Details:
+//   "kind" string - the kind attribute of the resource being acted on.
+//   "name" string - the prefix where the reading error(s) occurred
+//   "causes" []StatusCause
+//      - (optional):
+//        - "type" CauseType - CauseTypeUnexpectedServerResponse
+//        - "message" string - the error message from the store backend
+//        - "field" string - the full path with the key of the resource that failed reading
+//
+// Status code 500
+#StatusReasonStoreReadError: #StatusReason & "StorageReadError"
 
 // StatusReasonTimeout means that the request could not be completed within the given time.
 // Clients can get this response only when they specified a timeout param in the request,
@@ -1233,8 +1279,7 @@ import (
 }
 
 // Patch is provided to give a concrete name and type to the Kubernetes PATCH request body.
-#Patch: {
-}
+#Patch: {}
 
 // A label selector is a label query over a set of resources. The result of matchLabels and
 // matchExpressions are ANDed. An empty label selector matches all objects. A null
@@ -1285,6 +1330,39 @@ import (
 #LabelSelectorOpNotIn:        #LabelSelectorOperator & "NotIn"
 #LabelSelectorOpExists:       #LabelSelectorOperator & "Exists"
 #LabelSelectorOpDoesNotExist: #LabelSelectorOperator & "DoesNotExist"
+
+// FieldSelectorRequirement is a selector that contains values, a key, and an operator that
+// relates the key and values.
+#FieldSelectorRequirement: {
+	// key is the field selector key that the requirement applies to.
+	key: string @go(Key) @protobuf(1,bytes,opt)
+
+	// operator represents a key's relationship to a set of values.
+	// Valid operators are In, NotIn, Exists, DoesNotExist.
+	// The list of operators may grow in the future.
+	operator: #FieldSelectorOperator @go(Operator) @protobuf(2,bytes,opt,casttype=FieldSelectorOperator)
+
+	// values is an array of string values.
+	// If the operator is In or NotIn, the values array must be non-empty.
+	// If the operator is Exists or DoesNotExist, the values array must be empty.
+	// +optional
+	// +listType=atomic
+	values?: [...string] @go(Values,[]string) @protobuf(3,bytes,rep)
+}
+
+// A field selector operator is the set of operators that can be used in a selector requirement.
+#FieldSelectorOperator: string // #enumFieldSelectorOperator
+
+#enumFieldSelectorOperator:
+	#FieldSelectorOpIn |
+	#FieldSelectorOpNotIn |
+	#FieldSelectorOpExists |
+	#FieldSelectorOpDoesNotExist
+
+#FieldSelectorOpIn:           #FieldSelectorOperator & "In"
+#FieldSelectorOpNotIn:        #FieldSelectorOperator & "NotIn"
+#FieldSelectorOpExists:       #FieldSelectorOperator & "Exists"
+#FieldSelectorOpDoesNotExist: #FieldSelectorOperator & "DoesNotExist"
 
 // ManagedFieldsEntry is a workflow-id, a FieldSet and the group version of the resource
 // that the fieldset applies to.

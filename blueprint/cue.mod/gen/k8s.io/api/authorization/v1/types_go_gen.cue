@@ -94,6 +94,74 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	// Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
 	// +optional
 	name?: string @go(Name) @protobuf(7,bytes,opt)
+
+	// fieldSelector describes the limitation on access based on field.  It can only limit access, not broaden it.
+	//
+	// This field  is alpha-level. To use this field, you must enable the
+	// `AuthorizeWithSelectors` feature gate (disabled by default).
+	// +optional
+	fieldSelector?: null | #FieldSelectorAttributes @go(FieldSelector,*FieldSelectorAttributes) @protobuf(8,bytes,opt)
+
+	// labelSelector describes the limitation on access based on labels.  It can only limit access, not broaden it.
+	//
+	// This field  is alpha-level. To use this field, you must enable the
+	// `AuthorizeWithSelectors` feature gate (disabled by default).
+	// +optional
+	labelSelector?: null | #LabelSelectorAttributes @go(LabelSelector,*LabelSelectorAttributes) @protobuf(9,bytes,opt)
+}
+
+// LabelSelectorAttributes indicates a label limited access.
+// Webhook authors are encouraged to
+// * ensure rawSelector and requirements are not both set
+// * consider the requirements field if set
+// * not try to parse or consider the rawSelector field if set. This is to avoid another CVE-2022-2880 (i.e. getting different systems to agree on how exactly to parse a query is not something we want), see https://www.oxeye.io/resources/golang-parameter-smuggling-attack for more details.
+// For the *SubjectAccessReview endpoints of the kube-apiserver:
+// * If rawSelector is empty and requirements are empty, the request is not limited.
+// * If rawSelector is present and requirements are empty, the rawSelector will be parsed and limited if the parsing succeeds.
+// * If rawSelector is empty and requirements are present, the requirements should be honored
+// * If rawSelector is present and requirements are present, the request is invalid.
+#LabelSelectorAttributes: {
+	// rawSelector is the serialization of a field selector that would be included in a query parameter.
+	// Webhook implementations are encouraged to ignore rawSelector.
+	// The kube-apiserver's *SubjectAccessReview will parse the rawSelector as long as the requirements are not present.
+	// +optional
+	rawSelector?: string @go(RawSelector) @protobuf(1,bytes,opt)
+
+	// requirements is the parsed interpretation of a label selector.
+	// All requirements must be met for a resource instance to match the selector.
+	// Webhook implementations should handle requirements, but how to handle them is up to the webhook.
+	// Since requirements can only limit the request, it is safe to authorize as unlimited request if the requirements
+	// are not understood.
+	// +optional
+	// +listType=atomic
+	requirements?: [...metav1.#LabelSelectorRequirement] @go(Requirements,[]metav1.LabelSelectorRequirement) @protobuf(2,bytes,rep)
+}
+
+// FieldSelectorAttributes indicates a field limited access.
+// Webhook authors are encouraged to
+// * ensure rawSelector and requirements are not both set
+// * consider the requirements field if set
+// * not try to parse or consider the rawSelector field if set. This is to avoid another CVE-2022-2880 (i.e. getting different systems to agree on how exactly to parse a query is not something we want), see https://www.oxeye.io/resources/golang-parameter-smuggling-attack for more details.
+// For the *SubjectAccessReview endpoints of the kube-apiserver:
+// * If rawSelector is empty and requirements are empty, the request is not limited.
+// * If rawSelector is present and requirements are empty, the rawSelector will be parsed and limited if the parsing succeeds.
+// * If rawSelector is empty and requirements are present, the requirements should be honored
+// * If rawSelector is present and requirements are present, the request is invalid.
+#FieldSelectorAttributes: {
+	// rawSelector is the serialization of a field selector that would be included in a query parameter.
+	// Webhook implementations are encouraged to ignore rawSelector.
+	// The kube-apiserver's *SubjectAccessReview will parse the rawSelector as long as the requirements are not present.
+	// +optional
+	rawSelector?: string @go(RawSelector) @protobuf(1,bytes,opt)
+
+	// requirements is the parsed interpretation of a field selector.
+	// All requirements must be met for a resource instance to match the selector.
+	// Webhook implementations should handle requirements, but how to handle them is up to the webhook.
+	// Since requirements can only limit the request, it is safe to authorize as unlimited request if the requirements
+	// are not understood.
+	// +optional
+	// +listType=atomic
+	requirements?: [...metav1.#FieldSelectorRequirement] @go(Requirements,[]metav1.FieldSelectorRequirement) @protobuf(2,bytes,rep)
 }
 
 // NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
