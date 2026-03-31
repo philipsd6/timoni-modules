@@ -33,7 +33,7 @@ import (
 						ports: [
 							{
 								name:          "http"
-								containerPort: 8083
+								containerPort: 9696
 								protocol:      "TCP"
 							},
 						]
